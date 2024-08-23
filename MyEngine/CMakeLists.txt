@@ -20,15 +20,15 @@ target_include_directories(MyEngine PUBLIC
 
 # Specify output locations for the library and include headers
 install(TARGETS MyEngine
-    EXPORT MyEngineConfig
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
+    EXPORT FindMyEngine
+    ARCHIVE DESTINATION lib/$<CONFIG>
+    LIBRARY DESTINATION lib/$<CONFIG>
     RUNTIME DESTINATION bin
 )
 install(DIRECTORY include/ DESTINATION include)
 
 # Export the configuration to be used by other projects
-install(EXPORT MyEngineConfig
+install(EXPORT FindMyEngine
     NAMESPACE MyEngine::
-    DESTINATION C:/Dev/giraphics/cmake-game-lib-skeleton-1/MyEngine/build/cmake
+    DESTINATION cmake
 )

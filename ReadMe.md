@@ -2,20 +2,20 @@ Here's an example of how to set up a CMake project to create a C++ library and t
 
 # Creating a C++ Library with CMake
 
-Assume the library is named MyLibrary.
+Assume the library is named MyEngine.
 
 **Project Structure**
 
 ```
 Copy code
-MyLibrary/
+MyEngine/
 │
 ├── CMakeLists.txt
 ├── include/
-│   └── MyLibrary/
-│       └── MyLibrary.h
+│   └── MyEngine/
+│       └── MyEngine.h
 └── src/
-    └── MyLibrary.cpp
+    └── MyEngine.cpp
 ```
 
 `CMakeLists.txt` for the Library
@@ -24,26 +24,26 @@ MyLibrary/
 cmake_minimum_required(VERSION 3.10)
 
 # Project name
-project(MyLibrary VERSION 1.0.0 LANGUAGES CXX)
+project(MyEngine VERSION 1.0.0 LANGUAGES CXX)
 
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add the library
-add_library(MyLibrary STATIC
-    src/MyLibrary.cpp
+add_library(MyEngine STATIC
+    src/MyEngine.cpp
 )
 
 # Include directories
-target_include_directories(MyLibrary PUBLIC
+target_include_directories(MyEngine PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
 # Specify output locations for the library and include headers
-install(TARGETS MyLibrary
-    EXPORT MyLibraryConfig
+install(TARGETS MyEngine
+    EXPORT MyEngineConfig
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
@@ -51,20 +51,20 @@ install(TARGETS MyLibrary
 install(DIRECTORY include/ DESTINATION include)
 
 # Export the configuration to be used by other projects
-install(EXPORT MyLibraryConfig
-    NAMESPACE MyLibrary::
-    DESTINATION lib/cmake/MyLibrary
+install(EXPORT MyEngineConfig
+    NAMESPACE MyEngine::
+    DESTINATION lib/cmake/MyEngine
 )
 ```
 
 ## Consuming the Library in a Project
 
-Assume the consuming project is named `MyApp`.
+Assume the consuming project is named `MyGame`.
 
 **Project Structure**
 
 ```
-MyApp/
+MyGame/
 │
 ├── CMakeLists.txt
 └── src/
@@ -78,7 +78,7 @@ cmake_minimum_required(VERSION 3.10)
 
 # Project name
 
-project(MyApp VERSION 1.0.0 LANGUAGES CXX)
+project(MyGame VERSION 1.0.0 LANGUAGES CXX)
 
 # Specify the C++ standard
 
@@ -87,14 +87,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Find the library (assuming it was installed globally or in a known directory)
 
-find_package(MyLibrary REQUIRED)
+find_package(MyEngine REQUIRED)
 
 # Add the executable
 
-add_executable(MyApp src/main.cpp)
+add_executable(MyGame src/main.cpp)
 
 # Link the library to the executable
-target_link_libraries(MyApp PRIVATE MyLibrary::MyLibrary) 
+target_link_libraries(MyGame PRIVATE MyEngine::MyEngine) 
 ```
 
 ## Building the Library and Consuming Project
@@ -102,37 +102,38 @@ target_link_libraries(MyApp PRIVATE MyLibrary::MyLibrary)
 **Step 1: Build the Library**
 
 ```
-cd MyLibrary
+cd MyEngine
 mkdir build
 cd build
 cmake ..
 cmake --build . --config Release
-cmake --install . --prefix C:\path\to\install --config Release
+cmake --install . --prefix ../../my-install-dir --config Release
 ```
 
-This will generate the static library **libMyLibrary.a** (or **.lib** on Windows) and install the headers and configuration files as specified in the CMakeLists.txt.
+This will generate the static library **libMyEngine.a** (or **.lib** on Windows) and install the headers and configuration files as specified in the CMakeLists.txt.
 
 **Step 2: Build the Consuming Project**
+Note: Add CMAKE_MODULE_PATH in the CMakeLists.txt to indicate the desire path of installed directory(which is the path of 'my-install-dir' here)
 
 ```
-cd MyApp
+cd MyGame
 mkdir build
 cd build
 cmake ..
-cmake --build .
+cmake --build . --config Debug
 ```
 
-The `find_package(MyLibrary REQUIRED)` command in `MyApp` will look for the `MyLibraryConfig.cmake` file installed by the library, allowing `MyApp` to link against `MyLibrary`.
+The `find_package(MyEngine REQUIRED)` command in `MyGame` will look for the `MyEngineConfig.cmake` file installed by the library, allowing `MyGame` to link against `MyEngine`.
 
 **Explanation:**
 **Creating the Library:**
 
-`add_library(MyLibrary STATIC ...)` creates a static library from the source files.
-`target_include_directories(MyLibrary PUBLIC ...)` specifies the include directories that should be used by consumers of the library.
-`install(TARGETS MyLibrary ...)` sets up the installation rules, placing the library and headers in appropriate locations.
-`install(EXPORT ...)` generates a CMake configuration file (`MyLibraryConfig.cmake`) to be used by other projects.
+`add_library(MyEngine STATIC ...)` creates a static library from the source files.
+`target_include_directories(MyEngine PUBLIC ...)` specifies the include directories that should be used by consumers of the library.
+`install(TARGETS MyEngine ...)` sets up the installation rules, placing the library and headers in appropriate locations.
+`install(EXPORT ...)` generates a CMake configuration file (`MyEngineConfig.cmake`) to be used by other projects.
 **Consuming the Library:**
 
-`find_package(MyLibrary REQUIRED)` locates the installed library and its configuration.
-`target_link_libraries(MyApp PRIVATE MyLibrary::MyLibrary)` links the `MyLibrary` library with the `MyApp` executable.
+`find_package(MyEngine REQUIRED)` locates the installed library and its configuration.
+`target_link_libraries(MyGame PRIVATE MyEngine::MyEngine)` links the `MyEngine` library with the `MyGame` executable.
 This setup ensures that your library can be easily consumed by other projects, with CMake handling the details of include directories, linking, and build configurations.

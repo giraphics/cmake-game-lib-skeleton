@@ -1,0 +1,14 @@
+# Ignore all build files
+MyEngine/build/
+MyGame/build/
+my-install-dir/
+
+# Ignore compiled libraries
+*.dll
+*.so
+*.dylib
+*.lib
+*.a
+
+# Ignore macOS generated files
+.DS_Store

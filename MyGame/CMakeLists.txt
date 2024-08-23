@@ -7,15 +7,16 @@ project(MyGame VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+set(CMAKE_MODULE_PATH "C:/Dev/giraphics/cpp-game-lib/cmake-game-lib-skeleton/my-install-dir/cmake")
 
 # Find the library (assuming it was installed globally or in a known directory)
 find_package(MyEngine REQUIRED)
 
+
 # Add the executable
 add_executable(MyGame src/main.cpp)
 
-target_include_directories(MyGame PRIVATE C:/Dev/giraphics/cmake-game-lib-skeleton/MyEngine/build/install/include)
+#target_include_directories(MyGame PRIVATE C:/Dev/giraphics/cpp-game-lib/cmake-game-lib-skeleton/my-install-dir/include)
 
 # Link the library to the executable
 target_link_libraries(MyGame PRIVATE MyEngine::MyEngine)
