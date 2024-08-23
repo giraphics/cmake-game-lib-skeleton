@@ -10,12 +10,10 @@ MyEngine::~MyEngine() {}
 
 void MyEngine::run() {
     std::cout << "\n My Engine is Running in "; 
-    #ifdef _DEBUG
-        std::cout << ": DEBUG mode" << std::endl;
-    #elif defined(NDEBUG)
+    #ifdef NDEBUG
         std::cout << ": RELEASE mode" << std::endl;
     #else
-        std::cout << ": an unknown mode" << std::endl;
+        std::cout << ": DEBUG mode" << std::endl;
     #endif
 }
 
